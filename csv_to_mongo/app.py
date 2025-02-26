@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
-from mongo_connection import get_database
 import os
+import json
+from mongo_connection import get_database
+
 
 db = get_database()
 st.title("CSV File Uploader and Viewer")
@@ -25,6 +27,18 @@ if uploaded_file is not None:
         st.dataframe(df.style.set_properties(**{'background-color': '#f5f5f5',
                                                 'border-color': 'black',
                                                 'color': 'black'}))
+        
+        # Fetch data from MongoDB for download
+        saved_data = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB ObjectId
+        json_data = json.dumps(saved_data, indent=4)
+
+        # Provide a Download Button
+        st.download_button(
+            label="📥 Download Data as JSON",
+            data=json_data,
+            file_name=f"{file_name}.json",
+            mime="application/json"
+        )
 
     except Exception as e:
         st.error(f"❌ Error processing file: {e}")
