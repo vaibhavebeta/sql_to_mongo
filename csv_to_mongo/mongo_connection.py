@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from cosntants import DB_URL, DB_NAME
+from config_details import DB_NAME, DB_URL
 
 def get_database(db_name=DB_NAME, uri=DB_URL):
     """
